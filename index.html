@@ -3,243 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моя страница</title>
-    <link rel="icon" href="me.jpg" type="image/jpeg">
-    
+    <title>Портфолио</title>
     <style>
+        /* Переменные для темной темы (по умолчанию) */
         :root {
-            --bg: #121212;
-            --text: white;
-            --card: #222;
-            --border: #444;
-            --accent: #50fa7b;
+            --bg: #0d1117;
+            --card: #161b22;
+            --text: #c9d1d9;
+            --text-bright: #ffffff;
+            --accent: #2f81f7;
+            --border: #30363d;
         }
 
+        /* Переменные для светлой темы */
         .light-theme {
-            --bg: #f0f0f0;
-            --text: #121212;
-            --card: #fff;
-            --border: #ccc;
-            --accent: #007bff;
+            --bg: #ffffff;
+            --card: #f6f8fa;
+            --text: #57606a;
+            --text-bright: #24292f;
+            --accent: #0969da;
+            --border: #d0d7de;
         }
 
-        #progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: transparent;
-            z-index: 9999;
-        }
-        #progress-bar {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.1s ease;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.4s, color 0.4s;
         }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            padding: 40px 20px;
-            transition: 0.3s;
+        /* Анимация появления */
+        .fade-in {
+            animation: fadeIn 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
         }
 
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Кнопка переключения темы */
         .theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             background: var(--card);
-            color: var(--text);
             border: 1px solid var(--border);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 16px;
+            color: var(--text-bright);
+            padding: 8px 12px;
+            border-radius: 20px;
             cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+            transition: 0.3s;
+            z-index: 100;
         }
 
-        .container { width: 100%; max-width: 600px; text-align: center; }
-        
-        /* ОБНОВЛЕННЫЕ СТИЛИ АВАТАРКИ */
-        .profile-img { 
-            width: 120px; 
-            height: 120px; 
-            background-image: url('me.jpg'); 
-            background-size: cover; 
+        .container {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid var(--border);
+            background-image: url('me.jpg');
+            background-size: cover;
             background-position: center;
-            border-radius: 50%; 
-            margin: 0 auto 15px; 
-            border: 3px solid var(--border);
-            cursor: pointer; /* Показываем, что кликабельно */
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.3s, transform 0.3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .profile-img:hover {
-            filter: brightness(0.8);
-            border-color: var(--accent);
-        }
-
-        /* Текст при наведении (опционально) */
-        .profile-img::after {
-            content: "Изм.";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            font-size: 10px;
-            padding: 2px 0;
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .profile-img:hover::after {
-            opacity: 1;
-        }
-
-        .about-section {
-            margin: 20px 0 30px;
-            line-height: 1.6;
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .link-btn { 
-            display: block; background: var(--card); color: var(--text); 
-            text-decoration: none; padding: 18px; margin-bottom: 12px; 
-            border-radius: 15px; font-size: 18px; font-weight: bold; 
-            border: 2px solid var(--border); 
-            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-        }
-
-        .link-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            background: var(--border);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
-            width: 100%;
-        }
-
-        .project-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: left;
-            transition: 0.3s;
-        }
-
-        .project-card:hover {
             border-color: var(--accent);
             transform: scale(1.02);
         }
 
-        .project-card h3 { margin: 0 0 10px 0; font-size: 18px; }
-        .project-card p { margin: 0; font-size: 14px; opacity: 0.8; }
-
-        @media (max-width: 480px) {
-            .container { max-width: 100%; }
-            .theme-toggle { padding: 8px 12px; font-size: 14px; }
+        h1 {
+            color: var(--text-bright);
+            font-size: 24px;
+            margin: 10px 0 5px;
         }
+
+        .description {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-bright);
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .link-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            background-color: var(--bg);
+        }
+
+        #fileInput { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌓 Тема</button>
 
-    <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
+    <div class="container fade-in">
+        <div class="profile-img" id="avatar" onclick="triggerUpload()" title="Изменить фото"></div>
+        <input type="file" id="fileInput" accept="image/*" onchange="updatePhoto(event)">
 
-    <div class="container">
-        <div class="profile-img" id="avatar" onclick="changeAvatar()"></div>
-        <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
-        
-        <h1 id="name">Ксюша</h1>
-        
-        <div class="about-section">
-            <p>Добро пожаловать на мой сайт!</p>
-        </div>
+        <h1>Ксюша</h1>
+        <p class="description">Digital Creator & Developer</p>
 
-        <a href="https://t.me/Kikimoriza02" class="link-btn" onclick="vib(40)">Мой Telegram</a>
-        <a href="https://vk.ru/id578113961" class="link-btn" onclick="vib(40)">Мой VK</a>
-
-        <h2 style="margin-top: 50px;">Мои проекты</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <h3>Личный сайт</h3>
-                <p>Этот самый сайт, который вы видите.</p>
-            </div>
-            <div class="project-card">
-                <h3>В разработке</h3>
-                <p>Скоро здесь будет что-то интересное.</p>
-            </div>
+        <div class="links">
+            <a href="https://t.me/Kikimoriza02" class="link-item">Telegram</a>
+            <a href="https://vk.ru/id578113961" class="link-item">ВКонтакте</a>
         </div>
     </div>
 
-<script>
-    // Проверяем при загрузке, есть ли сохраненное фото
-    window.onload = function() {
-        const savedAvatar = localStorage.getItem('userAvatar');
-        if (savedAvatar) {
-            document.getElementById('avatar').style.backgroundImage = `url(${savedAvatar})`;
+    <script>
+        // Состояние темы и фото при загрузке
+        window.onload = () => {
+            // Загружаем фото
+            const savedPhoto = localStorage.getItem('userAvatar');
+            if (savedPhoto) document.getElementById('avatar').style.backgroundImage = `url(${savedPhoto})`;
+
+            // Загружаем тему
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-theme');
+            }
+        };
+
+        // Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            
+            // Вибрация (если поддерживается телефоном)
+            if (navigator.vibrate) navigator.vibrate(40);
         }
-    };
 
-    function vib(ms) {
-        if (navigator.vibrate) navigator.vibrate(ms);
-    }
+        // Логика фото
+        function triggerUpload() { document.getElementById('fileInput').click(); }
 
-    function toggleTheme() {
-        vib(60);
-        document.body.classList.toggle('light-theme');
-    }
-
-    // ЛОГИКА СМЕНЫ ФОТО
-    function changeAvatar() {
-        vib(40);
-        document.getElementById('fileInput').click();
-    }
-
-    function loadPhoto(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imageData = e.target.result;
-                // Меняем фон аватарки
-                document.getElementById('avatar').style.backgroundImage = `url(${imageData})`;
-                // Сохраняем в память браузера
-                localStorage.setItem('userAvatar', imageData);
-            };
-            reader.readAsDataURL(file);
+        function updatePhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const result = e.target.result;
+                    document.getElementById('avatar').style.backgroundImage = `url(${result})`;
+                    localStorage.setItem('userAvatar', result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
-    }
-
-    window.onscroll = function() {
-        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        let scrolled = (winScroll / height) * 100;
-        document.getElementById("progress-bar").style.width = scrolled + "%";
-    };
-</script>
-
+    </script>
 </body>
 </html>
